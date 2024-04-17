@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useFieldArray, get } from "react-hook-form";
 
 import { InputAdornment } from "@mui/material";
 
@@ -16,17 +16,20 @@ import AddIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 
 function Home() {
+  const [inputWidth, setInputWidth] = useState([]);
+
   const {
     register,
     handleSubmit,
     reset,
     formState,
     formState: { errors, isSubmitSuccessful },
-    getValues,
+    // getValues,
   } = useForm({ defaultValues: { ingridient: "" } });
   const {
     register: register2,
     handleSubmit: handleSubmit2,
+    getValues,
     control,
   } = useForm();
 
@@ -36,8 +39,16 @@ function Home() {
   });
 
   const onSubmitIngridient = (data) => {
+    // if (data.ingridient.length * 10 > 50) {
+    setInputWidth([...inputWidth, data.ingridient.length * 7.5 + 50 + "px"]);
+
+    // data.inputWidth = data.ingridient.length * 10 + "px";
+    // } else {
+    // data.inputWidth = 50;
+    // }
     append(data.ingridient);
-    console.log(data);
+    // console.log(getValues(`ingridients.${0}.inputWidth`));
+    // console.log(getValues(`ingridients.${0}`));
   };
 
   useEffect(() => {
@@ -119,15 +130,20 @@ function Home() {
                 <AddIcon />
               </Button>
             </Paper>
+            <Button form="form" variant="outlined" type="submit">
+              Submit
+            </Button>
           </Grid>
           <Grid sx={{ width: "60%" }}>
             <p>Ingrediants</p>
             <form id="form" key={2} onSubmit={handleSubmit2(onSubmit)}>
               <Box
-                pacing={{ xs: 1, sm: 2 }}
+                // pacing={{ xs: 1, sm: 2 }}
                 direction="row"
                 useFlexGap
                 flexWrap="wrap"
+                padding={0}
+                sx={{ width: "100%", height: "100%" }}
               >
                 {fields.map((item, index) => (
                   <TextField
@@ -135,18 +151,39 @@ function Home() {
                     variant="outlined"
                     type="text"
                     placeholder="Ingredient"
-                    fullWidth
-                    style={{ minWidth: "100px", width: "100px" }}
+                    size="small"
+                    sx={{
+                      // minWidth: "100px",
+                      // width: "80px",
+                      width: inputWidth[index] ? inputWidth[index] : "50px",
+                      marginLeft: "5px",
+                      marginBottom: "5px",
+                      input: { cursor: "pointer" },
+                      // margin: "10px",
+                      // height: "10px",
+                    }}
                     InputProps={{
                       readOnly: true,
                       endAdornment: (
-                        <InputAdornment position="start">
+                        <InputAdornment
+                          position="start"
+                          sx={{
+                            // width: "100%",
+                            // height: "100%",
+                            marginRight: "-5px",
+                          }}
+                        >
                           <ClearIcon />
                         </InputAdornment>
                       ),
                     }}
                     {...register2(`ingridients.${index}`)}
-                    onClick={() => remove(index)}
+                    onClick={() => {
+                      remove(index);
+                      setInputWidth(
+                        inputWidth.filter((item, i) => i !== index)
+                      );
+                    }}
                   />
                 ))}
                 <TextField
@@ -159,9 +196,6 @@ function Home() {
             </form>
           </Grid>
         </Grid>
-        <Button form="form" variant="outlined" type="submit">
-          Submit
-        </Button>
       </Grid>
     </Grid>
   );

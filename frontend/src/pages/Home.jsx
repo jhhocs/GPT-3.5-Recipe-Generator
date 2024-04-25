@@ -17,6 +17,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 function Home() {
   const [inputWidth, setInputWidth] = useState([]);
+  const [responses, setResponses] = useState(null);
+  const [hasResponse, setHasReseponse] = useState(false);
 
   const {
     register,
@@ -26,6 +28,7 @@ function Home() {
     formState: { errors, isSubmitSuccessful },
     // getValues,
   } = useForm({ defaultValues: { ingridient: "" } });
+
   const {
     register: register2,
     handleSubmit: handleSubmit2,
@@ -51,6 +54,17 @@ function Home() {
     // console.log(getValues(`ingridients.${0}`));
   };
 
+  const callAPI = async (data) => {
+    console.log("API KEY: ", process.env.API_KEY);
+    // try {
+    //   const response = await (await fetch(process.env.API_KEY)).json();
+    //   setResponses(response);
+    //   setHasReseponse(true);
+    // } catch (error) {
+    //   console.log("Error calling API");
+    // }
+  };
+
   useEffect(() => {
     if (isSubmitSuccessful && !errors.ingridient) {
       console.log("reset");
@@ -60,6 +74,7 @@ function Home() {
 
   const onSubmit = (data) => {
     console.log(data);
+    callAPI();
   };
 
   return (
@@ -112,6 +127,7 @@ function Home() {
                 variant="outlined"
                 type="text"
                 placeholder="Enter ingridient"
+                // margin={1}
                 sx={{ ml: 1, flex: 1 }}
                 {...register("ingridient", {
                   validate: (value) => {
@@ -130,7 +146,12 @@ function Home() {
                 <AddIcon />
               </Button>
             </Paper>
-            <Button form="form" variant="outlined" type="submit">
+            <Button
+              form="form"
+              variant="outlined"
+              type="submit"
+              sx={{ marginTop: "10px" }}
+            >
               Submit
             </Button>
           </Grid>
@@ -145,53 +166,57 @@ function Home() {
                 padding={0}
                 sx={{ width: "100%", height: "100%" }}
               >
-                {fields.map((item, index) => (
+                <Box>
+                  {fields.map((item, index) => (
+                    <TextField
+                      key={item.id}
+                      variant="outlined"
+                      type="text"
+                      placeholder="Ingredient"
+                      size="small"
+                      sx={{
+                        // minWidth: "100px",
+                        // width: "80px",
+                        width: inputWidth[index] ? inputWidth[index] : "50px",
+                        marginLeft: "5px",
+                        marginBottom: "5px",
+                        input: { cursor: "pointer" },
+                        // margin: "10px",
+                        // height: "10px",
+                      }}
+                      InputProps={{
+                        readOnly: true,
+                        endAdornment: (
+                          <InputAdornment
+                            position="start"
+                            sx={{
+                              // width: "100%",
+                              // height: "100%",
+                              marginRight: "-5px",
+                            }}
+                          >
+                            <ClearIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      {...register2(`ingridients.${index}`)}
+                      onClick={() => {
+                        remove(index);
+                        setInputWidth(
+                          inputWidth.filter((item, i) => i !== index)
+                        );
+                      }}
+                    />
+                  ))}
+                </Box>
+                <Box>
                   <TextField
-                    key={item.id}
                     variant="outlined"
                     type="text"
-                    placeholder="Ingredient"
-                    size="small"
-                    sx={{
-                      // minWidth: "100px",
-                      // width: "80px",
-                      width: inputWidth[index] ? inputWidth[index] : "50px",
-                      marginLeft: "5px",
-                      marginBottom: "5px",
-                      input: { cursor: "pointer" },
-                      // margin: "10px",
-                      // height: "10px",
-                    }}
-                    InputProps={{
-                      readOnly: true,
-                      endAdornment: (
-                        <InputAdornment
-                          position="start"
-                          sx={{
-                            // width: "100%",
-                            // height: "100%",
-                            marginRight: "-5px",
-                          }}
-                        >
-                          <ClearIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    {...register2(`ingridients.${index}`)}
-                    onClick={() => {
-                      remove(index);
-                      setInputWidth(
-                        inputWidth.filter((item, i) => i !== index)
-                      );
-                    }}
+                    placeholder="Cuisine"
+                    {...register2("cuisine")}
                   />
-                ))}
-                <TextField
-                  variant="outlined"
-                  type="text"
-                  placeholder="Cuisine"
-                  {...register2("cuisine")}
-                />
+                </Box>
               </Box>
             </form>
           </Grid>

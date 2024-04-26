@@ -55,7 +55,7 @@ function Home() {
   };
 
   const callAPI = async (data) => {
-    console.log("API KEY: ", process.env.API_KEY);
+    console.log("API KEY: ", process.env.REACT_APP_API_KEY);
     // try {
     //   const response = await (await fetch(process.env.API_KEY)).json();
     //   setResponses(response);

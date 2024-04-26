@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useForm, useFieldArray, get } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 
 import { InputAdornment } from "@mui/material";
 
@@ -7,8 +7,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Unstable_Grid2";
 import InputBase from "@mui/material/InputBase";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
+// import List from "@mui/material/List";
+// import ListItem from "@mui/material/ListItem";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 
@@ -17,8 +17,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 function Home() {
   const [inputWidth, setInputWidth] = useState([]);
-  const [responses, setResponses] = useState(null);
-  const [hasResponse, setHasReseponse] = useState(false);
+  // const [responses, setResponses] = useState(null);
+  // const [hasResponse, setHasReseponse] = useState(false);
 
   const {
     register,
@@ -32,7 +32,7 @@ function Home() {
   const {
     register: register2,
     handleSubmit: handleSubmit2,
-    getValues,
+    // getValues,
     control,
   } = useForm();
 
@@ -70,6 +70,7 @@ function Home() {
       console.log("reset");
       reset({ ingridient: "" });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState, reset]);
 
   const onSubmit = (data) => {

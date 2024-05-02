@@ -76,7 +76,7 @@ function Home() {
         // setResponse(JSON.parse(result.choices[0].message.content));
         setLoading(false);
         // this.props.history.push("/recepies/" + response.data.id);
-        navigate("/recepies/" + response.data.id);
+        navigate("/recipes/" + response.data.id);
       })
       .catch((error) => {
         console.log(error);

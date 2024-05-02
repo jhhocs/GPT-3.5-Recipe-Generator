@@ -29,7 +29,6 @@ function Recipe() {
       })
         .then((response) => {
           console.log(response.data);
-          // setResponse(JSON.parse(result.choices[0].message.content));
           setResponse(response.data);
           setHasReseponse(true);
         })
@@ -43,8 +42,8 @@ function Recipe() {
             display: "flex",
             justifyContent: "center",
             marginTop: "50px",
-            height: "100vh", // This will center vertically on the whole viewport
-            fontSize: "1.5em", // Increase the font size
+            height: "100vh",
+            fontSize: "1.5em",
           }}
         >
           {error ? "Recipe not found!" : ""}

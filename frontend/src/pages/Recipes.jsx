@@ -18,7 +18,6 @@ function Recipes() {
   function Item(response) {
     const id = response.response.id;
     const recipe = JSON.parse(response.response.recipe);
-    // console.log(response.response);
     return (
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea component={RouterLink} to={`/Recipes/${id}`}>

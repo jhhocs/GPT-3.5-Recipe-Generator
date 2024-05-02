@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 import { InputAdornment } from "@mui/material";
 
@@ -44,8 +45,10 @@ function Home() {
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "ingridients",
+    name: "ingredients",
   });
+
+  const navigate = useNavigate();
 
   const onSubmitIngridient = (data) => {
     // if (data.ingridient.length * 10 > 50) {
@@ -56,8 +59,8 @@ function Home() {
     // data.inputWidth = 50;
     // }
     append(data.ingridient);
-    // console.log(getValues(`ingridients.${0}.inputWidth`));
-    // console.log(getValues(`ingridients.${0}`));
+    // console.log(getValues(`ingredients.${0}.inputWidth`));
+    // console.log(getValues(`ingredients.${0}`));
   };
 
   const callAPI = async (data) => {
@@ -66,7 +69,7 @@ function Home() {
       url: "http://localhost:3001/callAPI",
       data: {
         cuisine: data.cuisine,
-        ingridients: data.ingridients.toString(),
+        ingredients: data.ingredients.toString(),
         // cuisine: "Italian",
       },
     })
@@ -76,6 +79,8 @@ function Home() {
         setResponse(response.data);
         setHasReseponse(true);
         setLoading(false);
+        // this.props.history.push("/recepies/" + response.data.id);
+        navigate("/recepies/" + response.data.id);
       })
       .catch((error) => {
         console.log(error);
@@ -89,46 +94,48 @@ function Home() {
       });
   };
 
-  function Response() {
-    if (!hasResponse) {
-      return;
-    } else {
-      return (
-        <div>
-          {
-            <div>
-              <h1>{response.name}</h1>
-              <h4>{"Difficulty: " + response.difficulty}</h4>
-              <p>{"Preparation Time: " + response.prep_time}</p>
-              <p>{"Cook Time: " + response.cook_time}</p>
-              <p>{"Total Time: " + response.total_time}</p>
-              <p>{"Servings: " + response.servings}</p>
-              <h2>Ingredients</h2>
-              <ul>
-                {response.ingredients.map((ingredient, index) => (
-                  <li key={index}>
-                    {ingredient.name + " " + ingredient.quantity}
-                  </li>
-                ))}
-              </ul>
-              <h2>Instructions</h2>
-              <ol>
-                {response.instructions.map((instruction, index) => (
-                  <li key={index}>{instruction}</li>
-                ))}
-              </ol>
-              <h2>Additional Notes</h2>
-              <ul>
-                {response.notes.map((note, index) => (
-                  <li key={index}>{note}</li>
-                ))}
-              </ul>
-            </div>
-          }
-        </div>
-      );
-    }
-  }
+  // function Response() {
+  //   if (!hasResponse) {
+  //     return;
+  //   } else {
+  //     return (
+  //       <div>success</div>
+  //       // <Redirect to={"/recepies/" + response.id} />
+  //       // <div>
+  //       //   {
+  //       //     <div>
+  //       //       <h1>{response.name}</h1>
+  //       //       <h4>{"Difficulty: " + response.difficulty}</h4>
+  //       //       <p>{"Preparation Time: " + response.prep_time}</p>
+  //       //       <p>{"Cook Time: " + response.cook_time}</p>
+  //       //       <p>{"Total Time: " + response.total_time}</p>
+  //       //       <p>{"Servings: " + response.servings}</p>
+  //       //       <h2>Ingredients</h2>
+  //       //       <ul>
+  //       //         {response.ingredients.map((ingredient, index) => (
+  //       //           <li key={index}>
+  //       //             {ingredient.name + " " + ingredient.quantity}
+  //       //           </li>
+  //       //         ))}
+  //       //       </ul>
+  //       //       <h2>Instructions</h2>
+  //       //       <ol>
+  //       //         {response.instructions.map((instruction, index) => (
+  //       //           <li key={index}>{instruction}</li>
+  //       //         ))}
+  //       //       </ol>
+  //       //       <h2>Additional Notes</h2>
+  //       //       <ul>
+  //       //         {response.notes.map((note, index) => (
+  //       //           <li key={index}>{note}</li>
+  //       //         ))}
+  //       //       </ul>
+  //       //     </div>
+  //       //   }
+  //       // </div>
+  //     );
+  //   }
+  // }
 
   useEffect(() => {
     if (isSubmitSuccessful && !errors.ingridient) {
@@ -147,6 +154,7 @@ function Home() {
 
   return (
     <div>
+      {/* <Navbar /> */}
       <Grid
         container
         alignItems="center"
@@ -159,7 +167,7 @@ function Home() {
           padding={5}
           borderRadius={2}
           margin={10}
-          sx={{ width: "50vw", minHeight: "60vh" }}
+          sx={{ minWidth: "450px", width: "50vw", minHeight: "60vh" }}
         >
           <Grid
             item
@@ -230,7 +238,9 @@ function Home() {
               </LoadingButton>
             </Grid>
             <Grid sx={{ width: "60%" }}>
-              <p>Ingridients</p>
+              <Box sx={{ paddingTop: "10px" }}>
+                <p>Ingredients</p>
+              </Box>
               <form id="form" key={2} onSubmit={handleSubmit2(onSubmit)}>
                 <Box
                   // pacing={{ xs: 1, sm: 2 }}
@@ -273,7 +283,7 @@ function Home() {
                             </InputAdornment>
                           ),
                         }}
-                        {...register2(`ingridients.${index}`)}
+                        {...register2(`ingredients.${index}`)}
                         onClick={() => {
                           remove(index);
                           setInputWidth(
@@ -288,6 +298,7 @@ function Home() {
                       variant="outlined"
                       type="text"
                       placeholder="Cuisine"
+                      autoComplete="off"
                       {...register2("cuisine")}
                     />
                   </Box>
@@ -296,7 +307,6 @@ function Home() {
             </Grid>
           </Grid>
         </Grid>
-        <Response />
       </Grid>
     </div>
   );

@@ -22,8 +22,6 @@ import axios from "axios";
 
 function Home() {
   const [inputWidth, setInputWidth] = useState([]);
-  const [response, setResponse] = useState(null);
-  const [hasResponse, setHasReseponse] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -76,8 +74,6 @@ function Home() {
       .then((response) => {
         console.log(response.data);
         // setResponse(JSON.parse(result.choices[0].message.content));
-        setResponse(response.data);
-        setHasReseponse(true);
         setLoading(false);
         // this.props.history.push("/recepies/" + response.data.id);
         navigate("/recepies/" + response.data.id);
